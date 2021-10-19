@@ -5,7 +5,7 @@ block_cipher = None
 
 
 a = Analysis(['main.py'],
-             pathex=['C:\\Windows\\System32\\downlevel\\', 'C:\\Users\\Kaio Pablo Martins\\Documents\\Kaio\\Migradores\\gemmap_patrimonio'],
+             pathex=['C:\\Users\\Kaio Pablo Martins\\Documents\\Kaio\\Migradores\\gemmap_patrimonio'],
              binaries=[],
              datas=[],
              hiddenimports=[],
@@ -37,4 +37,4 @@ exe = EXE(pyz,
           disable_windowed_traceback=False,
           target_arch=None,
           codesign_identity=None,
-          entitlements_file=None , icon='C:\\Users\\Kaio Pablo Martins\\Documents\\Kaio\\Migradores\\gemmap_patrimonio\\amendola.ico')
+          entitlements_file=None , icon='amendola.ico')

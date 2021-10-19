@@ -84,8 +84,9 @@ def converte_bens():
             PERCENTEMP_PAT,
             PERCENQTD_PAT,
             DAE_PAT,
-            CODANT)
-        VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)""")
+            CODANT,
+            OBS_PAT)
+        VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)""")
 
     
 
@@ -116,13 +117,14 @@ def converte_bens():
         percenqtd_pat= None
         dae_pat= None
         codant= row["nro"]
+        obs_pat = row["descricao"]
 
             
 
         destino.execute(insert, (codigo_pat,empresa_pat,codigo_gru_pat,codigo_set_pat,codigo_set_atu_pat,chapa_pat,
                                 nota_pat,orig_pat,codigo_for_pat,codigo_tip_pat,codigo_sit_pat,discr_pat,datae_pat,
                                 dtlan_pat,dt_contabil,valaqu_pat,valdes_pat,valatu_pat,quan_pat,valres_pat,percentemp_pat,
-                                percenqtd_pat,dae_pat,codant))
+                                percenqtd_pat,dae_pat,codant, obs_pat))
    
     conexao.commit()
 
@@ -272,5 +274,52 @@ def mov_baixas():
         destino.execute(update,(data_mov,codigo_bai_mov,codigo_pat_mov))
     conexao.commit()
 
+def depreciacoes():
+    sql = """
+    SELECT  d.BPVLR_BEPA_NRO, d.VALOR, d.PORCENT, TO_DATE(ano || '-' || mes || '-' || '1','YYYY-MM-DD') AS BPVLR_DATA_AVAL,
+	(SELECT DEPSEC_NRO  FROM SYSTEM.D3_BP_DS P1 WHERE P1.BEPA_NRO = d.BPVLR_BEPA_NRO 
+	ORDER  BY DATA_INICIO DESC fetch first 1 row only) AS DEPSEC_NRO 
+	FROM SYSTEM.D3_DEPR_CORR d
+    """
+
+    insert = destino.prep("""
+    INSERT INTO
+        PT_MOVBEM (CODIGO_MOV,
+        EMPRESA_MOV,
+        CODIGO_PAT_MOV,
+        DATA_MOV,
+        TIPO_MOV,
+        CODIGO_CPL_MOV,
+        CODIGO_SET_MOV,
+        VALOR_MOV,
+        HISTORICO_MOV,
+        LOTE_MOV,
+        PERCENTUAL_MOV, 
+        DEPRECIACAO_MOV)
+    VALUES (?,?,?,?,
+            ?,?,?,?,
+            ?,?,?,?)
+    """)
+
+    i= int(destino.execute("SELECT max(codigo_mov) FROM PT_MOVBEM pm ").fetchone()[0])
+
+    for row in conexao.get(sql):
+        i += 1
+        codigo_mov = i
+        empresa_mov = base.empresa
+        codigo_pat_mov = row["bpvlr_bepa_nro"]
+        data_mov = row["bpvlr_data_aval"]
+        tipo_mov = "R"
+        codigo_cpl_mov ="123810101"
+        codigo_set_mov = row["depsec_nro"]
+        valor_mov = (row["valor"]) * -1
+        historico_mov = "DEPRECIAÇÃO"
+        lote_mov = 0
+        percentual_mov = row["porcent"]
+        depreciacao_mov = "S"
+
+        destino.execute(insert, (codigo_mov, empresa_mov, codigo_pat_mov, data_mov, tipo_mov, codigo_cpl_mov, codigo_set_mov, valor_mov, historico_mov, lote_mov, percentual_mov, depreciacao_mov))
+
+    conexao.commit()
 
         

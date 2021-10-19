@@ -107,8 +107,11 @@ def iniciar():
     if cb_mov_baixas.get() == "1":
         registra_log("Baixas Convertidas")
         bens.mov_baixas()
+    
+    if cb_depreciacoes.get() == "1":
+        registra_log("Depreciacoes Convertidas")
+        bens.depreciacoes()    
     base.trigger(0)
-
     varBar.set(len(cbs) -1)
 
 def quit():                            
@@ -216,6 +219,9 @@ def on_check():
     if cb_mov_baixas.get() == "1":chbox_mov_baixas["fg"]= on_color  
     else:chbox_mov_baixas["fg"] = off_color
 
+    if cb_depreciacoes.get() == "1":chbox_depreciacoes["fg"]= on_color 
+    else:chbox_depreciacoes["fg"] = off_color
+
 cb_cria_campos = StringVar(win)     # Variável para o chekcbox
 cb_cria_campos.set(0)  
 chbox_cria_campos = Checkbutton(toolbox,variable = cb_cria_campos,text="Cria Campos",background="#202124",command=on_check,fg=off_color)
@@ -300,13 +306,19 @@ chbox_mov_baixas = Checkbutton(toolbox,variable = cb_mov_baixas,text="Baixas",ba
 chbox_mov_baixas.config(font=("Arial",13))
 chbox_mov_baixas.place(x= 450, y= 80)
 
+cb_depreciacoes = StringVar(win)
+cb_depreciacoes.set(0)
+chbox_depreciacoes = Checkbutton(toolbox,variable = cb_depreciacoes,text="Depreciações",background="#202124",command=on_check,fg=off_color) 
+chbox_depreciacoes.config(font=("Arial",13))
+chbox_depreciacoes.place(x= 450, y=105)
+
 cb_checkall = StringVar(win)
 cb_checkall.set(0)
 chbox_checkall = Checkbutton(toolbox,variable = cb_checkall,text="", background="#303134",command=checkall ,fg=off_color)
 chbox_checkall.config(font=("Arial",13))
 chbox_checkall.place(x= 650, y= 0)
 
-cbs = [cb_cria_campos,cb_limpa_tabelas,cb_tipos_mov,cb_tipos_ajuste,cb_baixas,cb_tipo_bens,cb_situacao,cb_grupo,cb_unidade,cb_subunidade,cb_bens,cb_aquisicao,cb_transferencias,cb_mov_baixas,cb_checkall]
+cbs = [cb_cria_campos,cb_limpa_tabelas,cb_tipos_mov,cb_tipos_ajuste,cb_baixas,cb_tipo_bens,cb_situacao,cb_grupo,cb_unidade,cb_subunidade,cb_bens,cb_aquisicao,cb_transferencias,cb_mov_baixas,cb_depreciacoes,cb_checkall]
 
 ### Container 2 ###
 
