@@ -1,2 +1,2 @@
 # Conversores
-Conversores de Dados -- SCPI 
+Conversores de Dados (ORCL -- FIREBIRD) 
